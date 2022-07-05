@@ -23,7 +23,7 @@ module.exports = defineConfig({
   devServer: {
     historyApiFallback: true,
     allowedHosts: 'all',
-    port: 443,
+    port: 10000,
     https: {
       key: fs.readFileSync(resolve('../../certificate/cert.key')),
       cert: fs.readFileSync(resolve('../../certificate/cert.crt')),

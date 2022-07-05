@@ -1,13 +1,14 @@
 {
-  "name": "portal",
+  "name": "index",
   "version": "1.0.0",
-  "description": "主应用基座",
+  "description": "首页子应用",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "devDependencies": {
+    "@typescript-eslint/parser": "^5.4.0",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-plugin-router": "~5.0.0",
