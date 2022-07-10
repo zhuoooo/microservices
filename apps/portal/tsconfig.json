@@ -32,6 +32,7 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
+    "../../node_modules/webpack/module.d.ts",
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],

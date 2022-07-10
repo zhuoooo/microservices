@@ -1,10 +1,10 @@
 {
-  "name": "index",
+  "name": "overview",
   "version": "1.0.0",
-  "description": "首页子应用",
+  "description": "概览页子应用",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve": "npx vue-cli-service serve",
+    "build": "npx vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "devDependencies": {
