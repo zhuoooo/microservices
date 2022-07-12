@@ -10,16 +10,20 @@ Vue.config.productionTip = false
 // @ts-ignore
 const isProd = ['production', 'prod'].includes(process.env.NODE_ENV)
 
-async function init () {
+async function initMicroApp() {
   await initChunks([
     {
       name: 'overview',
-      chunk: `${isProd ? '/overview' : 'https://localhost:10000'}/remoteEntry.js`
+      chunk: `${isProd ? '/overview' : 'https://10.32.133.217:10000'}/remoteEntry.js`
     }
   ], {
     router,
     store
   })
+}
+
+async function init () {
+  await initMicroApp()
 
   new Vue({
     router,

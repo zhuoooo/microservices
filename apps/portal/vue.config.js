@@ -61,7 +61,7 @@ module.exports = defineConfig({
           name: appName,
           filename: 'remoteEntry.js',
           remotes: {
-            overviewApp: `overview@${isProd ? '/overview' : 'https://localhost:10000'}/remoteEntry.js`
+            overviewApp: `overview@${isProd ? '/overview' : 'https://10.32.133.217:10000'}/remoteEntry.js`
           },
           exposes: {
             './exports': './src/exposes/exports.ts'
