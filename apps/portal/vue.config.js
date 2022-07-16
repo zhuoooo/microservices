@@ -16,10 +16,11 @@ function resolve(dir) {
 }
 
 module.exports = defineConfig({
-  transpileDependencies: true,
-  publicPath: isProd ? '/' : 'auto',
+  publicPath: isProd ? '' : 'auto',
+  productionSourceMap: true,
   pages: {
     index: {
+      filename: 'index.html',
       template: './src/index.html',
       entry: ['./src/index.ts']
     }
@@ -34,21 +35,14 @@ module.exports = defineConfig({
     }
   },
   configureWebpack: config => {
-    if (!isProd) {
-      config.plugins.push(new ESLintPlugin({
-        fix: true,
-        extensions: ['.jsx', '.js', '.vue', '.ts', '.tsx'],
-        threads: true,
-        lintDirtyModulesOnly: true
-      }));
-    }
-
+    
     config.resolve.extensions = ['.jsx', '.js', '.ts', '.tsx', '.vue']
   },
   chainWebpack: config => {
 
     const shared = {}
-    ;['vue', 'vue-router', 'vuex'].map((item) => {
+    const sharedDependency = ['vue', 'vue-router', 'vuex']
+    sharedDependency.forEach((item) => {
       shared[item] = {
         eager: true,
         singleton: true,
@@ -61,20 +55,29 @@ module.exports = defineConfig({
           name: appName,
           filename: 'remoteEntry.js',
           remotes: {
-            overviewApp: `overview@${isProd ? '/overview' : 'https://10.32.133.217:10000'}/remoteEntry.js`
+            overviewApp: `overview@${isProd ? '/overview' : '//localhost:10000'}/remoteEntry.js`
           },
           exposes: {
             './exports': './src/exposes/exports.ts'
-          },
-          shared
+          }
         }
       ])
 
     config.plugin('ExternalTemplateRemotesPlugin')
       .use(ExternalTemplateRemotesPlugin)
 
-    config.output.set('uniqueName', appName)
+    config.plugin('eslint')
+      .use(ESLintPlugin, [
+        {
+          fix: true,
+          extensions: ['.jsx', '.js', '.vue', '.ts', '.tsx'],
+          threads: true,
+          lintDirtyModulesOnly: true
+        }
+      ])
+
     config.output
+      .set('uniqueName', appName)
       .filename('js/[name].[contenthash:8].js')
       .chunkFilename('js/[name].[contenthash:8].js')
   }

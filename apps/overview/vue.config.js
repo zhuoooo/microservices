@@ -16,10 +16,11 @@ function resolve(dir) {
 }
 
 module.exports = defineConfig({
-  transpileDependencies: true,
-  publicPath: isProd ? '/home' : 'auto',
+  publicPath: isProd ? `/${appName}` : 'auto',
+  productionSourceMap: true,
   pages: {
-    index: {
+    overview: {
+      filename: 'index.html',
       template: './src/index.html',
       entry: ['./src/index.ts']
     }
@@ -32,26 +33,16 @@ module.exports = defineConfig({
       key: fs.readFileSync(resolve('../../certificate/cert.key')),
       cert: fs.readFileSync(resolve('../../certificate/cert.crt')),
     },
-    headers: {
-      'Access-Control-Allow-Origin': '*'
-    },
   },
   configureWebpack: config => {
-    if (!isProd) {
-      config.plugins.push(new ESLintPlugin({
-        fix: true,
-        extensions: ['.jsx', '.js', '.vue', '.ts', '.tsx'],
-        threads: true,
-        lintDirtyModulesOnly: true
-      }));
-    }
 
     config.resolve.extensions = ['.jsx', '.js', '.ts', '.tsx', '.vue']
   },
   chainWebpack: config => {
 
     const shared = {}
-    ;['vue', 'vue-router', 'vuex'].map((item) => {
+    const sharedDependency = ['vue', 'vue-router', 'vuex']
+    sharedDependency.forEach((item) => {
       shared[item] = {
         singleton: true,
         requiredVersion: rootPackage.dependencies[item]
@@ -60,23 +51,32 @@ module.exports = defineConfig({
     config.plugin('ModuleFederationPlugin')
       .use(ModuleFederationPlugin, [
         {
-          name: appName,
+          name: appName, // 该名称必须与入口名称相匹配
           filename: 'remoteEntry.js',
           remotes: {
             portal: `portal@${isProd ? '' : 'https://localhost'}/remoteEntry.js`
           },
           exposes: {
             './exports': './src/exports.ts'
-          },
-          shared
+          }
         }
       ])
 
     config.plugin('ExternalTemplateRemotesPlugin')
       .use(ExternalTemplateRemotesPlugin)
 
-    config.output.set('uniqueName', appName)
+    config.plugin('eslint')
+      .use(ESLintPlugin, [
+        {
+          fix: true,
+          extensions: ['.jsx', '.js', '.vue', '.ts', '.tsx'],
+          threads: true,
+          lintDirtyModulesOnly: true
+        }
+      ])
+ 
     config.output
+      .set('uniqueName', appName)
       .filename('js/[name].[contenthash:8].js')
       .chunkFilename('js/[name].[contenthash:8].js')
   }
