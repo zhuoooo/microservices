@@ -66,12 +66,12 @@ export async function initChunks(remoteList: RemoteApp[], config: {
                 const { bootstrap } = await loadComponent(name, './exports')
 
                 if (bootstrap) {
-                    const { routes, storeModule } = await bootstrap()
+                    const { routes } = await bootstrap()
 
                     // 注册子应用的 vuex
-                    Object.entries(storeModule).forEach(([key, value]) => {
-                        config.store.registerModule(key, value)
-                    })
+                    // Object.entries(storeModule).forEach(([key, value]) => {
+                    //     config.store.registerModule(key, value)
+                    // })
                     // 注册子应用的路由
                     config.router?.addRoutes(routes)
                 } else {

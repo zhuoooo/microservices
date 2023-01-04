@@ -21,14 +21,14 @@ module.exports = defineConfig({
   pages: {
     overview: {
       filename: 'index.html',
-      template: './src/index.html',
-      entry: ['./src/index.ts']
+      template: 'src/index.html',
+      entry: ['src/index.ts']
     }
   },
   devServer: {
     historyApiFallback: true,
     allowedHosts: 'all',
-    port: 10000,
+    port: 1002,
     https: {
       key: fs.readFileSync(resolve('../../certificate/cert.key')),
       cert: fs.readFileSync(resolve('../../certificate/cert.crt')),
@@ -37,8 +37,13 @@ module.exports = defineConfig({
   configureWebpack: config => {
 
     config.resolve.extensions = ['.jsx', '.js', '.ts', '.tsx', '.vue']
+    config.optimization = {
+      splitChunks: false,
+    }
   },
   chainWebpack: config => {
+    config.resolve.alias
+      .set('src', resolve('src'))
 
     const shared = {}
     const sharedDependency = ['vue', 'vue-router', 'vuex']

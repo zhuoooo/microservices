@@ -14,7 +14,7 @@ async function initMicroApp() {
   await initChunks([
     {
       name: 'overview',
-      chunk: `${isProd ? '/overview' : '//localhost:10000'}/remoteEntry.js`
+      chunk: `${isProd ? '/overview' : 'https://10.32.133.217:1002'}/remoteEntry.js`
     }
   ], {
     router,

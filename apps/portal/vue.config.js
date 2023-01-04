@@ -21,8 +21,8 @@ module.exports = defineConfig({
   pages: {
     index: {
       filename: 'index.html',
-      template: './src/index.html',
-      entry: ['./src/index.ts']
+      template: 'src/index.html',
+      entry: ['src/index.ts']
     }
   },
   devServer: {
@@ -35,10 +35,15 @@ module.exports = defineConfig({
     }
   },
   configureWebpack: config => {
-    
+
     config.resolve.extensions = ['.jsx', '.js', '.ts', '.tsx', '.vue']
+    config.optimization = {
+      splitChunks: false,
+    }
   },
   chainWebpack: config => {
+    config.resolve.alias
+      .set('src', resolve('src'))
 
     const shared = {}
     const sharedDependency = ['vue', 'vue-router', 'vuex']
@@ -55,7 +60,7 @@ module.exports = defineConfig({
           name: appName,
           filename: 'remoteEntry.js',
           remotes: {
-            overviewApp: `overview@${isProd ? '/overview' : '//localhost:10000'}/remoteEntry.js`
+            overviewApp: `overview@${isProd ? '/overview' : 'https://10.32.133.217:1002'}/remoteEntry.js`
           },
           exposes: {
             './exports': './src/exposes/exports.ts'
@@ -77,7 +82,6 @@ module.exports = defineConfig({
       ])
 
     config.output
-      .set('uniqueName', appName)
       .filename('js/[name].[contenthash:8].js')
       .chunkFilename('js/[name].[contenthash:8].js')
   }
